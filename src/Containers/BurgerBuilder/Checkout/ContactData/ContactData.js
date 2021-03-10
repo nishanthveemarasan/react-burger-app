@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import axios from '../../../../axios-order';
 import { connect } from 'react-redux';
+import {purchaseBurger} from '../../../../Store/actions/order';
 class ContactData extends Component {
+
     state = {
         name: '',
         email: '',
@@ -17,7 +19,7 @@ class ContactData extends Component {
     }
     orderHandler = (event) => {
         event.preventDefault();
-        this.setState({loading: true});
+      //  this.setState({loading: true});
         const order = {
             ingredients: this.props.ings,
             price: this.props.price,
@@ -30,14 +32,15 @@ class ContactData extends Component {
                 email: 'test@gcom'
             }
         }
-        axios.post('/orders.json', order)
-            .then(response => {
-                this.setState({ loading: false });
-                console.log(response);
-            }).catch(error => {
-                this.setState({ loading: false });
-                console.log(error);
-            });
+        this.props.OnOrderBurger(order);
+        // axios.post('/orders.json', order)
+        //     .then(response => {
+        //         this.setState({ loading: false });
+        //         console.log(response);
+        //     }).catch(error => {
+        //         this.setState({ loading: false });
+        //         console.log(error);
+        //     });
     }
     render() {
         return (
@@ -75,8 +78,16 @@ class ContactData extends Component {
 }
 const mapStateToProps = state => {
     return {
-        ings: state.ingredients,
-        price: state.totalPrice
+        ings: state.burgerBuilder.ingredients,
+        price: state.burgerBuilder.totalPrice,
+        loading: state.order.axiosloading,
     }
-}
-export default connect(mapStateToProps)(ContactData);
+};
+
+const mapDispatchToProps = dispatch =>{
+    return{
+        OnOrderBurger: (data) => dispatch(purchaseBurger(data)),
+    }
+    
+};
+export default connect(mapStateToProps , mapDispatchToProps)(ContactData);

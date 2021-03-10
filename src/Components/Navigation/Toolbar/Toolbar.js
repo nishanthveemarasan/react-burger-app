@@ -8,8 +8,8 @@ const toolbar = (props) => {
             <div>MENU</div>
             <Logo />
             <nav>
-                <NavItems />
-             </nav>
+                <NavItems isAuthenticated={props.isAuth} />
+            </nav>
         </header>
     );
 };
